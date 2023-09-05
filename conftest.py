@@ -1,5 +1,6 @@
 import time
 from datetime import datetime
+
 import pytest
 from selenium import webdriver
 
@@ -8,7 +9,7 @@ from config.drivers import get_driver
 from config.options import get_options
 from constants import OUTPUT_ROOT
 
-BROWSER_NAME = None
+BROWSER_NAME = ''
 
 
 @pytest.fixture(scope="function", autouse=True)
@@ -39,7 +40,6 @@ def pytest_runtest_makereport(item, call):
     setattr(item, "rep_" + rep.when, rep)
 
 
-# check if a test has failed
 @pytest.fixture(scope="function", autouse=True)
 def test_failed_check(request):
     yield
@@ -47,15 +47,15 @@ def test_failed_check(request):
         print("setting up a test failed!", request.node.originalname)
     elif request.node.rep_setup.passed:
         if request.node.rep_call.failed:
-            driver = request.node.funcargs['driver']
+            driver = request.cls.driver
             take_screenshot(driver, request.node.originalname)
             print("executing test failed", request.node.originalname)
 
 
 def take_screenshot(driver, originalname):
     time.sleep(1)
-    file_name = f'{originalname}_{datetime.today().strftime("%Y-%m-%d_%H:%M")}.png'.replace("/", "_").replace("::",
-                                                                                                              "__")
+    file_name = \
+        f'{originalname}_{datetime.today().strftime("%Y-%m-%d_%H:%M")}.png'.replace("/", "_").replace("::", "__")
     driver.save_screenshot(f"{OUTPUT_ROOT}/{file_name}")
 
 

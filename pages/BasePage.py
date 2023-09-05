@@ -1,7 +1,8 @@
 from selenium.common import NoSuchElementException, StaleElementReferenceException, TimeoutException
-from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
+from selenium.webdriver.common.by import By
+from selenium.common.exceptions import ElementClickInterceptedException
 
 class BasePage:
     TIME = 15
@@ -19,8 +20,13 @@ class BasePage:
             .click()
 
     def _click(self, element: tuple):
-        el = self.driver.find_element(*element)
-        el.click()
+        wait = WebDriverWait(self.driver, timeout=10)
+        try:
+            el = wait.until(EC.element_to_be_clickable(element))
+            el.click()
+        except ElementClickInterceptedException:
+            print("Trying to click on the button again")
+            self.driver.execute_script("arguments[0].click()", el)
 
     def _find_element(self, element: tuple):
         return self.driver.find_element(*element)

@@ -4,6 +4,7 @@ from constants import DATA_ROOT
 from pages.StudentRegistrationFormPage import StudentRegistrationFormPage
 
 
+@pytest.mark.usefixtures("driver")
 class TestRegistrationForm:
     @pytest.mark.parametrize('first_name,last_name,email,phone, address, state, city',
                              [("IVAN", "IVANOV", "ivanov_ivan@gmail.com",
@@ -26,7 +27,6 @@ class TestRegistrationForm:
         student_reg_form.select_city()
         student_reg_form.scroll_down()
         student_reg_form.click_btn_submit()
-        # assert form
         student_reg_form.verify_confirm_form()
         student_reg_form.verify_full_name(first_name, last_name)
         student_reg_form.verify_email(email)

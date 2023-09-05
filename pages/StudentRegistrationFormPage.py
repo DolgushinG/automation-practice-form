@@ -1,3 +1,5 @@
+import time
+
 from locators.StudentRegistrationFormLocators import RegistrationForm
 from pages.BasePage import BasePage
 
@@ -29,6 +31,7 @@ class StudentRegistrationFormPage(BasePage):
         self._fill_field(RegistrationForm.user_mobile_number, phone)
 
     def click_checkbox_hobbies_sports(self) -> None:
+        self._wait_element(RegistrationForm.hobbies_checkbox_1)
         self._click(RegistrationForm.hobbies_checkbox_1)
 
     def attach_picture(self, path) -> None:
@@ -53,7 +56,7 @@ class StudentRegistrationFormPage(BasePage):
         self._wait_and_click(RegistrationForm.btn_submit)
 
     def verify_confirm_form(self) -> None:
-        self._wait_element(RegistrationForm.modal_submitting_form)
+        time.sleep(2)
         assert self._element_visible(RegistrationForm.modal_submitting_form)
 
     def verify_full_name(self, firstname: str, lastname: str) -> None:
